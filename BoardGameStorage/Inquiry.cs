@@ -8,6 +8,7 @@ namespace BoardGameStorage
 {
     internal class Inquiry
     {
+        //Properties
         public string CustomerFirstName {  get; set; }
         public string CustomerLastName { get; set; }
         public string CustomerEmail { get; set; }
@@ -24,6 +25,10 @@ namespace BoardGameStorage
         }
         public GameCondition ConditionWish { get; set; }
 
+        //Empty constructor for JSON
+        public Inquiry() { }
+
+        //Constructor
         public Inquiry(Customer customer, int id, string description, string gameWish, GameCondition conditionWish)
         {
             CustomerFirstName = customer.FirstName;

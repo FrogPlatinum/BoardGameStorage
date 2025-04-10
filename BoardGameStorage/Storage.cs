@@ -20,7 +20,7 @@ namespace BoardGameStorage
 
         Random random = new Random();
 
-        //Constructor to initialize sample games
+        //Constructor
         public Storage()
         {
             LoadAllData();

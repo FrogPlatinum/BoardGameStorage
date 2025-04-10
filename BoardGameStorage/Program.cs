@@ -13,7 +13,7 @@
             while (mainMenu)
             {
                 Console.WriteLine("------- Main Menu -------");
-                Console.WriteLine("1. See List of Games");
+                Console.WriteLine("1. Show All Games");
                 Console.WriteLine("2. Manage Games");
                 Console.WriteLine("3. Manage Inquiry");
                 Console.WriteLine("0. Exit Program");
@@ -23,7 +23,7 @@
 
                 switch (mainMenuInput)
                 {
-                    //1. See List of Games
+                    //1. Show All Games
                     case 1:
                         storage.PrintGameDetails();
                         break;
@@ -104,9 +104,10 @@
                         Console.WriteLine("1. Create Inquiry");
                         Console.WriteLine("2. Remove Inquiry");
                         Console.WriteLine("3. Search Inquiry");
+                        Console.WriteLine("4. Show All Inquiries");
                         Console.WriteLine("0. Go Back");
 
-                        int manageInquiryInput = IntInputHandler("Choose an Option: ", 3);
+                        int manageInquiryInput = IntInputHandler("Choose an Option: ", 4);
 
                         switch (manageInquiryInput)
                         {
@@ -151,6 +152,10 @@
                                 Console.WriteLine("Input Inquiry ID to Search: ");
                                 int inquirySearchInput = IntInputHandler("");
                                 storage.searchInquiryById(inquirySearchInput);
+                                break;
+                            //Show All Inquiries
+                            case 4:
+                                storage.PrintAllInquiries();
                                 break;
                             //3.0 Go Back
                             case 0:
