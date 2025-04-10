@@ -10,6 +10,8 @@ namespace BoardGameStorage
     {
         public string CustomerFirstName {  get; set; }
         public string CustomerLastName { get; set; }
+        public string CustomerEmail { get; set; }
+        public int CustomerPhoneNumber { get; set; }
         public int Id { get; set; }
         public string Description { get; set; }
         public string GameWish { get; set; }
@@ -26,6 +28,8 @@ namespace BoardGameStorage
         {
             CustomerFirstName = customer.FirstName;
             CustomerLastName = customer.LastName;
+            CustomerEmail = customer.Email;
+            CustomerPhoneNumber = customer.PhoneNumber;
             Id = id;
             Description = description;
             GameWish = gameWish;

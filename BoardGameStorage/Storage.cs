@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static BoardGameStorage.Game;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace BoardGameStorage
 {
@@ -21,23 +23,13 @@ namespace BoardGameStorage
         //Constructor to initialize sample games
         public Storage()
         {
-            SampleGames();
-        }
-  
-        //Sample Games
-        public void SampleGames()
-        {
-            gameList.Add(new Game("Chess", Game.ConditionLevel.Like_New,GenerateGameId(), 19.99, 2, 2, Game.GameCategory.Strategy));
-            gameList.Add(new Game("Monopoly", Game.ConditionLevel.Good,GenerateGameId(), 29.99, 2, 6, Game.GameCategory.Family));
-            gameList.Add(new Game("Codenames", Game.ConditionLevel.Decent,GenerateGameId(), 24.99, 4, 8, Game.GameCategory.Social_Deduction));
-            gameList.Add(new Game("Pandemic", Game.ConditionLevel.Like_New,GenerateGameId(), 39.99, 2, 4, Game.GameCategory.Cooperative));
-            gameList.Add(new Game("Clue", Game.ConditionLevel.Good,GenerateGameId(), 21.99, 3, 6, Game.GameCategory.Strategy));
-            gameList.Add(new Game("Codenames", Game.ConditionLevel.Like_New, GenerateGameId(), 24.99, 4, 8, Game.GameCategory.Social_Deduction));
+            LoadAllData();
         }
 
         //Print Game Details
         public void PrintGameDetails()
         {
+            LoadAllData();
             foreach (Game game in gameList)
             {
                 Console.WriteLine(new string('-', 25));
@@ -138,6 +130,9 @@ namespace BoardGameStorage
 
             //Adding game to list
             gameList.Add(newGame);
+
+            //Saving Data
+            SaveGameData();
         }
         
         //Remove Game Method
@@ -158,6 +153,7 @@ namespace BoardGameStorage
             {
                 gameList.Remove(gameToRemove);
                 Console.WriteLine($"{gameToRemove} Successfully Removed");
+                SaveGameData();
             }
             else
             {
@@ -168,6 +164,8 @@ namespace BoardGameStorage
         //Search Game By Name
         public void SearchGameByName(string gameName)
         {
+            LoadGameData();
+
             bool found = false;
 
             foreach (Game game in gameList)
@@ -206,7 +204,7 @@ namespace BoardGameStorage
         }
 
         //Create Inquiry
-        public void CreateInquiry(string customerFirstName, string customerLastName, string description, string gameWish, int conditionWish, string email, int phoneNumber)
+        public void CreateInquiry(string customerFirstName, string customerLastName, string email, int phoneNumber, string description, string gameWish, int conditionWish)
         {
             //Storing customer name
             Customer c = new Customer(customerFirstName, customerLastName, email, phoneNumber);
@@ -243,7 +241,7 @@ namespace BoardGameStorage
             }
 
             //Generate Unique Inquiry ID
-            int inquiryId = GenerateGameId();
+            int inquiryId = GenerateInquiryId();
 
             //Create Inquiry
             Inquiry inquiry = new Inquiry(c,inquiryId,description,gameWish,gameConditionWish);
@@ -251,11 +249,14 @@ namespace BoardGameStorage
             //Add Inquiry to list
             inquiryList.Add(inquiry);
 
+            //Saving Inquiry
+            SaveInquiryData();
+
             //Confirmation
-            Console.WriteLine("Inquiry Successfully Added");
+            Console.WriteLine($"Inquiry {inquiryId} Successfully Added");
         }
 
-        //Remove Inquiry | CONTINUE HERE <--
+        //Remove Inquiry
         public void RemoveInquiryById(int inquiryId)
         {
             Inquiry inquiryToRemove = null;
@@ -272,6 +273,7 @@ namespace BoardGameStorage
             {
                 inquiryList.Remove(inquiryToRemove);
                 Console.WriteLine($"Inquiry {inquiryToRemove.Id} Successfully Removed");
+                SaveInquiryData();
             }
             else 
             { 
@@ -282,6 +284,7 @@ namespace BoardGameStorage
         //Search Inquiry
         public void searchInquiryById(int inquiryId)
         {
+            LoadInquiryData();
             foreach (Inquiry inquiry in inquiryList)
             {
                 if (inquiryId == inquiry.Id)
@@ -292,6 +295,22 @@ namespace BoardGameStorage
                     Console.WriteLine($"Game Wish: {inquiry.GameWish}");
                     Console.WriteLine($"Condition Wish: {inquiry.ConditionWish}");
                 }
+            }
+        }
+
+        //Show All Inquiries
+        public void PrintAllInquiries()
+        {
+            foreach (Inquiry inquiry in inquiryList)
+            {
+                Console.WriteLine(new string('-', 25));
+                Console.WriteLine($"Inquiry ID: {inquiry.Id}");
+                Console.WriteLine($"Customer Name: {inquiry.CustomerFirstName} {inquiry.CustomerLastName}");
+                Console.WriteLine($"Email: {inquiry.CustomerEmail}");
+                Console.WriteLine($"Phone Number: {inquiry.CustomerPhoneNumber}");
+                Console.WriteLine($"Game Wish: {inquiry.GameWish}");
+                Console.WriteLine($"Condition Wish: {inquiry.ConditionWish}");
+                Console.WriteLine($"Description: {inquiry.Description}");
             }
         }
 
@@ -307,6 +326,50 @@ namespace BoardGameStorage
 
             usedInquiryIds.Add(randomInquiryId);
             return randomInquiryId;
+        }
+
+        //Save Game Data
+        public void SaveGameData()
+        {
+            string filePath = "games.json";
+            string json = JsonSerializer.Serialize(gameList, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, json);
+        }
+
+        //Save Inquiry Data
+        public void SaveInquiryData()
+        {
+            string filePath = "inquiries.json";
+            string json = JsonSerializer.Serialize(inquiryList, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, json);
+        }
+
+        //Load Game Data
+        public List<Game> LoadGameData()
+        {
+            string json = File.ReadAllText("games.json");
+            return JsonSerializer.Deserialize<List<Game>>(json);
+        }
+
+        //Load Inquiry Data
+        public List<Inquiry> LoadInquiryData()
+        {
+            string json = File.ReadAllText("inquiries.json");
+            return JsonSerializer.Deserialize<List<Inquiry>>(json);
+        }
+
+        //Save All Data
+        public void SaveAllData()
+        {
+            SaveGameData();
+            SaveInquiryData();
+        }
+
+        //Load All Data
+        public void LoadAllData()
+        {
+            gameList = LoadGameData();
+            inquiryList = LoadInquiryData();
         }
     }
 }

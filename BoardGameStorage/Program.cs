@@ -7,6 +7,8 @@
             Storage storage = new Storage();
             bool mainMenu = true;
 
+            
+
             //Main Menu
             while (mainMenu)
             {
@@ -77,7 +79,6 @@
                                 int gameCategoryInput = IntInputHandler("Choose an option: ",7);
 
                                 storage.AddGame(gameName, gameConditionInput, gamePrice, gameMinPlayer, gameMaxPlayer, gameCategoryInput);
-
                                 break;
                             //2.2. Remove Game
                             case 2:
@@ -126,7 +127,7 @@
                                 Console.WriteLine("2. Good");
                                 Console.WriteLine("3. Decent");
                                 Console.WriteLine("4. Acceptable");
-                                int conditionWishInput = IntInputHandler("Choose An Option: ",4);
+                                int conditionWish = IntInputHandler("Choose An Option: ",4);
 
                                 Console.WriteLine("Description / Additional Info: ");
                                 string description = Console.ReadLine();
@@ -137,6 +138,7 @@
                                 Console.Write("Customer Phone Number: ");
                                 int customerPhoneNumber = IntInputHandler("");
 
+                                storage.CreateInquiry(customerFirstName, customerLastName, customerEmail, customerPhoneNumber, description, gameWish, conditionWish);                        
                                 break;
                             //3.2 Remove Inquiry
                             case 2:
@@ -157,6 +159,7 @@
                         break;
                     //0. Exit
                     case 0:
+                        storage.SaveAllData();
                         mainMenu = false;
                         break;
                 }
